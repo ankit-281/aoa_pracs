@@ -4,6 +4,18 @@
 
 int X[max], m, w[max];
 
+void sortWeights(int w[], int n) {
+  for(int i=0;i<n-1;i++) {
+    for(int j=0;j<n-i-1;j++) {
+      if(w[j]>w[j+1]) {
+        int temp = w[j];
+        w[j] = w[j+1];
+        w[j+1] = temp;
+      }
+    }
+  }
+}
+
 void sumofsubset(int s, int k, int r) {
   X[k] = 1;
   if(s+w[k]==m) {
@@ -33,6 +45,8 @@ void main() {
 
   printf("Enter the target sum: ");
   scanf("%d", &m);
+
+  sortWeights(w, n);
 
   printf("Subsets whose sum is %d are:\n", m);
   sumofsubset(0, 0, r);
