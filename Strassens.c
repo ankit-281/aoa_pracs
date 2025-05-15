@@ -51,7 +51,7 @@ void strassen(int A[MAX][MAX], int B[MAX][MAX], int C[MAX][MAX], int size) {
     add(B11, B22, temp2, newSize);
     strassen(temp1, temp2, P, newSize);
 
-    // Q = B11*(A21 + A22)  
+    // Q = (A21 + A22) * B11
     add(A21, A22, temp1, newSize);
     strassen(temp1, B11, Q, newSize);
 
@@ -72,7 +72,7 @@ void strassen(int A[MAX][MAX], int B[MAX][MAX], int C[MAX][MAX], int size) {
     add(B11, B12, temp2, newSize);
     strassen(temp1, temp2, U, newSize);
 
-    // V = (A12 - A22) * (B22 + B21)
+    // V = (A12 - A22) * (B21 + B22)
     subtract(A12, A22, temp1, newSize);
     add(B21, B22, temp2, newSize);
     strassen(temp1, temp2, V, newSize);
@@ -118,7 +118,7 @@ void printMatrix(int C[MAX][MAX], int size) {
 int main() {
     int A[MAX][MAX], B[MAX][MAX], C[MAX][MAX], n;
 
-    printf("Enter size of matrix: ", MAX);
+    printf("Enter size of matrix: ");
     scanf("%d", &n);
 
     printf("Enter elements of matrix A:\n");

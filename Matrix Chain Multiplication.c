@@ -1,12 +1,8 @@
-#include <stdio.h>
-#include <limits.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<limits.h>
 
-#define max 100
-
-int C[max][max];
-int K[max][max];
-
-void brackets(int i, int j)
+void brackets(int s[][50], int i, int j)
 {
     if (i == j)
     {
@@ -15,68 +11,50 @@ void brackets(int i, int j)
     }
 
     printf("(");
-    brackets(i, K[i][j]);
-    brackets(K[i][j] + 1, j);
+    brackets(s,i, s[i][j]);
+    brackets(s,s[i][j] + 1, j);
     printf(")");
 }
 
-int main()
+void main()
 {
-    int n, q, min;
-    printf("Enter the no of dimensions: ");
-    scanf("%d", &n);
+	int d[50], diff, n, c[50][50], s[50][50], i, j, k;
+	printf("Enter the number of matrices: ");
+	scanf("%d",&n);
+	printf("Enter d matrix: ");
+	for(i=0; i<=n; i++)
+		scanf("%d",&d[i]);
+	for(i=0; i<=n; i++)
+		for(j=0; j<=n; j++)
+			c[i][j] = 0;
+	for(diff=1; diff<n; diff++)
+	{
+		for(i=1; i<n-diff+1; i++)
+		{
+			j = i+diff;
+			c[i][j] = INT_MAX;
+			for(k=i; k<j; k++)
+				if(c[i][k] + c[k+1][j] + d[i-1]*d[k]*d[j] < c[i][j])
+				{
+					c[i][j] = c[i][k] + c[k+1][j] + d[i-1]*d[k]*d[j];
+					s[i][j] = k;
+				}
+		}
+	}
+	printf("Cost matrix: \n");
+	for(i=1; i<=n; i++)
+	{
+		for(j=1; j<=n; j++)
+			printf("%d\t",c[i][j]);
+		printf("\n");
+	}
+	printf("k matrix: \n");
+	for(i=1; i<=n; i++)
+	{
+		for(j=1; j<=n; j++)
+			printf("%d\t",s[i][j]);
+		printf("\n");
+	}
 
-    int d[n];
-    for (int i = 0; i < n; i++)
-    {
-        scanf("%d", &d[i]);
-    }
-
-    for (int i = 1; i < n; i++)
-        C[i][i] = 0;
-
-    for (int r = 1; r < n - 1; r++) 
-    {
-        for (int i = 1; i < n - r; i++) 
-        {
-            int j = i + r; 
-            min = INT_MAX;
-            for (int k = i; k < j; k++)  
-            {
-                q = C[i][k] + C[k + 1][j] + d[i - 1] * d[k] * d[j];
-                if (q < min)
-                {
-                    min = q;
-                    K[i][j] = k;
-                }
-            }
-            C[i][j] = min;
-        }
-    }
-
-    printf("Cost table:\n");
-    for (int i = 1; i < n; i++)
-    {
-        for (int j = 1; j < n; j++)
-        {
-            printf("%d\t", C[i][j]);
-        }
-        printf("\n");
-    }
-
-    printf("\nK-Index Table:\n");
-    for (int i = 1; i < n; i++)
-    {
-        for (int j = 1; j < n; j++)
-        {
-            printf("%d\t", K[i][j]);
-        }
-        printf("\n");
-    }
-
-    printf("Multiplication order = ");
-    brackets(1, n - 1);
-    printf("\n");
-
-    return 0;
+	brackets(s,1,n);
 }
